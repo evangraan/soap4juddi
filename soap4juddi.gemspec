@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Provides connector, xml and brokerage facilities to a jUDDI consumer}
   spec.description   = %q{Provides connector, xml and brokerage facilities to a jUDDI consumer}
-  #spec.homepage      = "https://github.com:hetznerZA/soap4juddi.git"
+  spec.homepage      = "https://github.com/evangraan/soap4juddi"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
