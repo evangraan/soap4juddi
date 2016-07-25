@@ -1,5 +1,7 @@
 # Soap4juddi
 
+[![Gem Version](https://badge.fury.io/rb/soap4juddi.png)](https://badge.fury.io/rb/soap4juddi)
+
 Soap4juddi provides connector, xml and brokerage facilities to interested consumers. It takes care of talking http or https SOAP to a jUDDI instance, as well as a means of translating the consumer's business domain into the jUDDI business domain (businesses, entities, bindings, etc.)
 
 ## Installation
