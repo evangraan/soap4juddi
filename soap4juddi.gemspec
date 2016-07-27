@@ -20,13 +20,13 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.required_ruby_version = ['>=2.0.0']
 
-  spec.add_development_dependency "bundler", "~> 1.10"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec", "~> 3.4.0"
+  spec.add_development_dependency "bundler", "~> 1.3"
+  spec.add_development_dependency "rake"
+  spec.add_development_dependency "rspec"
   spec.add_development_dependency 'coveralls'
   spec.add_development_dependency 'byebug'
 #  spec.add_development_dependency 'simplecov', "~> 0.11.1"
 #  spec.add_development_dependency 'simplecov-rcov', "~> 0.2.3"
 
-  spec.add_dependency "jsender", "~> 0.1.6"
+  spec.add_dependency "jsender", "~> 0.2"
 end
