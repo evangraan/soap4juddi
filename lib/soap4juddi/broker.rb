@@ -116,6 +116,44 @@ module Soap4juddi
 
     private
 
+    def extract_service_entry_and_adjust(entries, entry, urn)
+      service = entry[/<ns2:serviceInfo (.*?)<\/ns2:serviceInfo>/, 1]
+      return entries, entry, true if service.nil? or ((service.is_a? String) and (service.strip == ""))
+      id = @soap_xml.extract_value(service, 'serviceKey')
+      entries[id.gsub(urn, "")] = { 'id' => id, 'name' => extract_name(service) } if id.include?(urn)
+      entry[/<ns2:serviceInfo (.*?)<\/ns2:serviceInfo>/, 1] = ""
+      entry.gsub!("<ns2:serviceInfo </ns2:serviceInfo>", "")
+      entry = nil if entry.strip == ""
+      return entries, entry, false
+    end
+
+    def extract_business_entry_and_adjust(entries, entry)
+      business = entry[/<ns2:businessInfo (.*?)<\/ns2:businessInfo>/, 1]
+      return entries, entry, true if business.nil? or ((business.is_a? String) and (business.strip == ""))
+      business[/<ns2:serviceInfos(.*?)<\/ns2:serviceInfos>/, 1] = "" if business[/<ns2:serviceInfos(.*?)<\/ns2:serviceInfos>/, 1]
+      id = @soap_xml.extract_value(entry, 'businessKey')
+      key = id.gsub(@urns['domains'], "").gsub(@urns['teams'], "")
+      entries[key] = { 'id' => id, 'name' => extract_name(business) }
+      entry[/<ns2:businessInfo (.*?)<\/ns2:businessInfo>/, 1] = ""
+      entry.gsub!("<ns2:businessInfo </ns2:businessInfo>", "")
+      entry = nil if entry.strip == ""
+      return entries, entry, false
+    end
+
+    def extract_contact_entry_and_adapt(entries, entry)
+      entry.gsub!('useType="(Extension, Domestic, International, DSN)"', "") if entry
+      entry.gsub!('useType="Email"', "") if entry
+      entry.gsub!("useType='(Extension, Domestic, International, DSN)'", "") if entry
+      entry.gsub!("useType='Email'", "") if entry
+      contact = entry[/<ns2:contact (.*?)<\/ns2:contact>/, 1]
+      return entries, entry, true if contact.nil? or ((contact.is_a? String) and (contact.strip == ""))
+      entries << { 'name' => extract_person_name(contact), 'description' => extract_description(contact), 'phone' => extract_phone(contact), 'email' => extract_email(contact)}
+      entry[/<ns2:contact (.*?)<\/ns2:contact>/, 1] = ""
+      entry.gsub!("<ns2:contact </ns2:contact>", "")
+      entry = nil if entry.strip == ""
+      return entries, entry, false
+    end
+
     def extract_service(soap)
       entries = {}
       entries[@soap_xml.extract_value(soap, 'serviceKey')] = extract_name(soap)
@@ -145,13 +183,8 @@ module Soap4juddi
       entries = {}
       entry = soap[/<ns2:serviceInfos>(.*?)<\/ns2:serviceInfos>/, 1]
       while entry do
-        service = entry[/<ns2:serviceInfo (.*?)<\/ns2:serviceInfo>/, 1]
-        break if service.nil? or ((service.is_a? String) and (service.strip == ""))
-        id = @soap_xml.extract_value(service, 'serviceKey')
-        entries[id.gsub(urn, "")] = { 'id' => id, 'name' => extract_name(service) } if id.include?(urn)
-        entry[/<ns2:serviceInfo (.*?)<\/ns2:serviceInfo>/, 1] = ""
-        entry.gsub!("<ns2:serviceInfo </ns2:serviceInfo>", "")
-        entry = nil if entry.strip == ""
+        entries, entry, should_break = extract_service_entry_and_adjust(entries, entry, urn)
+        break if should_break
       end
       { 'services' => entries }
     end
@@ -160,15 +193,8 @@ module Soap4juddi
       entries = {}
       entry = soap[/<ns2:businessList (.*?)<\/ns2:businessList>/, 1]
       while entry do
-        business = entry[/<ns2:businessInfo (.*?)<\/ns2:businessInfo>/, 1]
-        break if business.nil? or ((business.is_a? String) and (business.strip == ""))
-        business[/<ns2:serviceInfos(.*?)<\/ns2:serviceInfos>/, 1] = "" if business[/<ns2:serviceInfos(.*?)<\/ns2:serviceInfos>/, 1]
-        id = @soap_xml.extract_value(entry, 'businessKey')
-        key = id.gsub(@urns['domains'], "").gsub(@urns['teams'], "")
-        entries[key] = { 'id' => id, 'name' => extract_name(business) }
-        entry[/<ns2:businessInfo (.*?)<\/ns2:businessInfo>/, 1] = ""
-        entry.gsub!("<ns2:businessInfo </ns2:businessInfo>", "")
-        entry = nil if entry.strip == ""
+        entries, entry, should_break = extract_business_entry_and_adjust(entries, entry)
+        break if should_break
       end
       { 'businesses' => entries }
     end
@@ -293,18 +319,8 @@ module Soap4juddi
       entries = []
       entry = soap[/<ns2:contacts>(.*?)<\/ns2:contacts>/, 1]
       while entry do
-        # byebug
-        entry.gsub!('useType="(Extension, Domestic, International, DSN)"', "") if entry
-        entry.gsub!('useType="Email"', "") if entry
-        entry.gsub!("useType='(Extension, Domestic, International, DSN)'", "") if entry
-        entry.gsub!("useType='Email'", "") if entry
-        contact = entry[/<ns2:contact (.*?)<\/ns2:contact>/, 1]
-        break if contact.nil? or ((contact.is_a? String) and (contact.strip == ""))
-        # byebug
-        entries << { 'name' => extract_person_name(contact), 'description' => extract_description(contact), 'phone' => extract_phone(contact), 'email' => extract_email(contact)}
-        entry[/<ns2:contact (.*?)<\/ns2:contact>/, 1] = ""
-        entry.gsub!("<ns2:contact </ns2:contact>", "")
-        entry = nil if entry.strip == ""
+        entries, entry, should_break = extract_contact_entry_and_adapt(entries, entry)
+        break if should_break
       end
       entries
     end
