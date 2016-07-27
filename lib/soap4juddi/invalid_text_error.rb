@@ -1,4 +1,4 @@
 module Soap4juddi
-	class InvalidTextError < ArgumentError
-	end
+  class InvalidTextError < ArgumentError
+  end
 end

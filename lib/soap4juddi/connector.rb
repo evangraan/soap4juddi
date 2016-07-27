@@ -25,7 +25,7 @@ module Soap4juddi
 
     def authorize(base_uri)
       validate_base_uri(base_uri)
-      @auth_token = '' #clear existing auth token
+      @auth_token = ''
       @auth_token = request_auth_token(base_uri)
     end
 
@@ -58,9 +58,9 @@ module Soap4juddi
 
     def request_auth_token(base_uri)
       result = execute(build_authorization_request(base_uri)) do |res|
-         @auth_token = extract_auth_token(res.body)
-       end
-       @auth_token
+        @auth_token = extract_auth_token(res.body)
+      end
+      @auth_token
     end
 
     def build_authorization_request(base_uri)
@@ -72,11 +72,11 @@ module Soap4juddi
 
     def jsend_result(res, block)
       case res
-        when Net::HTTPSuccess
-          return soap_success(res, block)
-        else
-          return fail(res.body)
-        end       
+      when Net::HTTPSuccess
+        return soap_success(res, block)
+      else
+        return fail(res.body)
+      end
     end
 
     def soap_success(res, block)

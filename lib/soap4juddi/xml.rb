@@ -35,7 +35,7 @@ module Soap4juddi
 
     def validate_element(element)
       raise Soap4juddi::InvalidElementError.new('invalid element provided') if element.nil?
-      raise Soap4juddi::InvalidElementError.new('invalid element provided') if not element.is_a?(String)
+      raise Soap4juddi::InvalidElementError.new('invalid element provided') unless element.is_a?(String)
       raise Soap4juddi::InvalidElementError.new('no element provided') if element.strip == ''
     end
 

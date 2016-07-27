@@ -1,4 +1,4 @@
 module Soap4juddi
-	class InvalidElementError < ArgumentError
-	end
+  class InvalidElementError < ArgumentError
+  end
 end

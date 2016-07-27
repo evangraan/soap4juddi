@@ -1,4 +1,4 @@
 module Soap4juddi
-	class TestXML
-	end
+  class TestXML
+  end
 end

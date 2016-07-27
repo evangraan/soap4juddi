@@ -281,11 +281,11 @@ module Soap4juddi
       access_point = @soap_xml.element_with_value('accessPoint', binding, {'URLType' => extract_binding_url_type(binding)})
       description_data = @soap_xml.element_with_value('description', description)
       model_instance_details = @soap_xml.element_with_value('tModelInstanceDetails', '')
-      bindingTemplate = @soap_xml.element_with_value(
+      binding_template = @soap_xml.element_with_value(
         "bindingTemplate",
         "#{description_data}#{access_point}#{model_instance_details}",
         {'bindingKey' => '', 'serviceKey' => "#{urn}#{service}"})
-      body + bindingTemplate
+      body + binding_template
     end
 
     def validate_elements(elements, label)

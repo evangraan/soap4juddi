@@ -2,86 +2,86 @@ require 'spec_helper'
 
 describe Soap4juddi::XML do
   before :each do
-  	@iut = Soap4juddi::XML.new
-  	@element = 'element'
-  	@key = 'key'
-  	@value = 'value'
-  	@attributes = { 'attr1' => 'value 1', 'attr2' => 'value 2'}
-  	@well_formed = "<urn:element attr1='value 1' attr2='value 2'>value</urn:element>"
-  	@no_attributes = "<urn:element>value</urn:element>"
-  	@one_attribute = "<urn:element attr1='value 1'>value</urn:element>"
-  	@no_value = "<urn:element attr1='value 1' attr2='value 2'></urn:element>"
+    @iut = Soap4juddi::XML.new
+    @element = 'element'
+    @key = 'key'
+    @value = 'value'
+    @attributes = { 'attr1' => 'value 1', 'attr2' => 'value 2'}
+    @well_formed = "<urn:element attr1='value 1' attr2='value 2'>value</urn:element>"
+    @no_attributes = "<urn:element>value</urn:element>"
+    @one_attribute = "<urn:element attr1='value 1'>value</urn:element>"
+    @no_value = "<urn:element attr1='value 1' attr2='value 2'></urn:element>"
   end
 
   context "when building xml for an element with a value, potentially with attributes" do
-  	it "should produce an xml opening tag '<urn'" do
+    it "should produce an xml opening tag '<urn'" do
       expect(@iut.element_with_value(@element, @value, @attributes).include?('<urn')).to eq(true)  
-  	end
+    end
 
-  	it "should produce an xml closing tag '/urn>'" do
+    it "should produce an xml closing tag '/urn>'" do
       expect(@iut.element_with_value(@element, @value, @attributes).include?('</urn')).to eq(true)  
-  	end
+    end
 
-  	it "should name the xml tag according to the element provided" do
+    it "should name the xml tag according to the element provided" do
       expect(@iut.element_with_value(@element, @value, @attributes).include?('<urn:element')).to eq(true)  
       expect(@iut.element_with_value(@element, @value, @attributes).include?('</urn:element>')).to eq(true)  
-  	end
+    end
 
-  	it "should indicate the value provided as the value of the xml tag" do
+    it "should indicate the value provided as the value of the xml tag" do
       expect(@iut.element_with_value(@element, @value, @attributes).include?('>value<')).to eq(true)  
-  	end
+    end
 
-  	it "should not produce any attributes in the tag if none were provided" do
+    it "should not produce any attributes in the tag if none were provided" do
       expect(@iut.element_with_value(@element, @value)).to eq(@no_attributes)  
-  	end
+    end
 
-  	it "should produce one attribute in the tag separated from the key by a space if one attribute is provided" do
+    it "should produce one attribute in the tag separated from the key by a space if one attribute is provided" do
       expect(@iut.element_with_value(@element, @value, { 'attr1' => 'value 1'})).to eq(@one_attribute)  
-  	end
+    end
 
-  	it "should produce multiple attributes in the tag seperated from the key and one another by spaces if multiple attributes are provided" do
+    it "should produce multiple attributes in the tag seperated from the key and one another by spaces if multiple attributes are provided" do
       expect(@iut.element_with_value(@element, @value, @attributes)).to eq(@well_formed)  
-  	end
+    end
 
-  	it "should produce an empty value indication if no value is provided" do
+    it "should produce an empty value indication if no value is provided" do
       expect(@iut.element_with_value(@element, nil, @attributes)).to eq(@no_value)  
       expect(@iut.element_with_value(@element, '', @attributes)).to eq(@no_value)  
-  	end
+    end
 
-  	it "should raise an error InvalidElementError with 'invalid element provided' if no element is provided" do
-  	  expect {
+    it "should raise an error InvalidElementError with 'invalid element provided' if no element is provided" do
+      expect {
         @iut.element_with_value(nil, @value, @attributes)
-  	  }.to raise_error(Soap4juddi::InvalidElementError, 'invalid element provided')
-  	end
+      }.to raise_error(Soap4juddi::InvalidElementError, 'invalid element provided')
+    end
 
-  	it "should raise an error InvalidElementError with 'no element provided' if an empty element is provided" do
-  	  expect {
+    it "should raise an error InvalidElementError with 'no element provided' if an empty element is provided" do
+      expect {
         @iut.element_with_value('', @value, @attributes)
-  	  }.to raise_error(Soap4juddi::InvalidElementError, 'no element provided')
-  	end
+      }.to raise_error(Soap4juddi::InvalidElementError, 'no element provided')
+    end
 
-  	it "should raise an error InvalidElementError with 'no element provided' if an all spaces element is provided" do
-  	  expect {
+    it "should raise an error InvalidElementError with 'no element provided' if an all spaces element is provided" do
+      expect {
         @iut.element_with_value('   ', @value, @attributes)
-  	  }.to raise_error(Soap4juddi::InvalidElementError, 'no element provided')
-  	end
+      }.to raise_error(Soap4juddi::InvalidElementError, 'no element provided')
+    end
 
-  	it "should raise an error InvalidElementError with 'invalid element provided' if the element provided is not a string" do
-  	  expect {
+    it "should raise an error InvalidElementError with 'invalid element provided' if the element provided is not a string" do
+      expect {
         @iut.element_with_value(5, @value, @attributes)
-  	  }.to raise_error(Soap4juddi::InvalidElementError, 'invalid element provided')
-  	end
+      }.to raise_error(Soap4juddi::InvalidElementError, 'invalid element provided')
+    end
 
-  	it "should produce well-formed xml with all the properties included" do
+    it "should produce well-formed xml with all the properties included" do
       expect(@iut.element_with_value(@element, @value, @attributes)).to eq(@well_formed)  
-  	end
+    end
   end
 
   context "when building xml for an element with a key-value value, potentially with attributes" do
-  	it "should use element_with_value with the value set to 'key=value'" do
-  		expect(@iut).to receive(:element_with_value).with(@element, 'key:value', @attributes)
-  		@iut.element_with_key_value(@element, @key, @value, @attributes)
-  	end
+    it "should use element_with_value with the value set to 'key=value'" do
+      expect(@iut).to receive(:element_with_value).with(@element, 'key:value', @attributes)
+      @iut.element_with_key_value(@element, @key, @value, @attributes)
+    end
   end
 
   context "when given soap text and a key, extract a value from the key" do

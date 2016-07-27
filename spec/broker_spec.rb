@@ -5,32 +5,32 @@ require 'byebug'
 
 describe Soap4juddi::Broker do
   before :each do
-  	@test_connector = Soap4juddi::TestConnector.new
-  	@test_urns = @urns = {
-     'base' => 'test_base:',
-     'company' => 'test_company:',
-     'domains' => 'test_domains:',
-     'teams' => 'test_teams:',
-     'services' => 'test_services:',
-     'service-components' => 'test_service-components' }
+    @test_connector = Soap4juddi::TestConnector.new
+    @test_urns = @urns = {
+      'base' => 'test_base:',
+      'company' => 'test_company:',
+      'domains' => 'test_domains:',
+      'teams' => 'test_teams:',
+      'services' => 'test_services:',
+      'service-components' => 'test_service-components' }
     allow(Soap4juddi::Connector).to receive(:new).and_return(@test_connector)
-  	@iut = Soap4juddi::Broker.new(@test_urns)
+    @iut = Soap4juddi::Broker.new(@test_urns)
     @iut.base_uri = 'base_uri'
     @business_key = 'test-business'
   end
 
   context "when initialized" do
-  	it "should remember URNS provided" do
+    it "should remember URNS provided" do
       expect(@iut.urns).to eq(@test_urns)
-  	end
+    end
 
-  	it "should have a UDDI connector" do
-  		expect(@iut.soap_connector).to eq(@test_connector)
-  	end
+    it "should have a UDDI connector" do
+      expect(@iut.soap_connector).to eq(@test_connector)
+    end
 
-  	it "should have a UDDI XML parser" do
+    it "should have a UDDI XML parser" do
       expect(@iut.soap_xml.is_a?(Soap4juddi::XML)).to eq(true)
-  	end
+    end
   end
 
   context "when setting the base URI" do
@@ -542,7 +542,7 @@ describe Soap4juddi::Broker do
   end
 
   context "when authenticating" do
-  	it "should delegate to the soap connector" do
+    it "should delegate to the soap connector" do
       expect(@test_connector).to receive(:authenticate).with('user', 'password')
       @iut.authenticate('user', 'password')
     end
