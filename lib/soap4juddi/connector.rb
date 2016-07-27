@@ -57,7 +57,7 @@ module Soap4juddi
     private
 
     def request_auth_token(base_uri)
-      result = execute(build_authorization_request(base_uri)) do |res|
+      execute(build_authorization_request(base_uri)) do |res|
         @auth_token = extract_auth_token(res.body)
       end
       @auth_token

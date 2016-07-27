@@ -197,7 +197,7 @@ module Soap4juddi
     end
 
     def add_auth_body(body)
-      body =  auth_body + body
+      auth_body + body
     end
 
     def extract_service_entries_elements(soap, urn)
@@ -352,7 +352,7 @@ module Soap4juddi
       while entry do
         binding = entry[/<ns2:bindingTemplate (.*?)<\/ns2:bindingTemplate>/, 1]
         break if binding.nil? or ((binding.is_a? String) and (binding.strip == ""))
-        id = @soap_xml.extract_value(binding, 'bindingKey')
+        @soap_xml.extract_value(binding, 'bindingKey')
         entries << extract_access_point(binding)
         entry[/<ns2:bindingTemplate (.*?)<\/ns2:bindingTemplate>/, 1] = ""
         entry.gsub!("<ns2:bindingTemplate </ns2:bindingTemplate>", "")

@@ -8,7 +8,7 @@ module Soap4juddi
       validate_element(element)
       xml = "<urn:#{element}"
       xml = append_key_value_attributes_to_xml(xml, attributes) if attributes
-      xml += ">#{value}</urn:#{element}>"
+      xml + ">#{value}</urn:#{element}>"
     end   
       
     def extract_value(soap, key)

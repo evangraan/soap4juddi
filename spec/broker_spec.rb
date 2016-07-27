@@ -390,7 +390,7 @@ describe Soap4juddi::Broker do
       result = @iut.find_element_bindings(@name, @urn)
       test_one = 'http://one-uri.com/my_service'
       test_two = 'http://two-uri.com/my_service'
-      result['bindings'].each do |id, binding|
+      result['bindings'].each do |_id, binding|
         uri = binding['access_point']
         matched = ((uri == test_one) or (uri == test_two))
         expect(matched).to eq(true)

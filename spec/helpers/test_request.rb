@@ -11,8 +11,8 @@ module Soap4juddi
     attr_accessor :action
     attr_accessor :body
 
-    def start(hostname, port) 
-      @respose
+    def start(_hostname, _port) 
+      @response
     end
   end
 end
