@@ -1,6 +1,9 @@
 # Soap4juddi
 
 [![Gem Version](https://badge.fury.io/rb/soap4juddi.png)](https://badge.fury.io/rb/soap4juddi)
+[![Build Status](https://travis-ci.org/evangraan/soap4juddi.svg?branch=master)](https://travis-ci.org/evangraan/soap4juddi)
+[![Coverage Status](https://coveralls.io/repos/github/evangraan/soap4juddi/badge.svg?branch=master)](https://coveralls.io/github/evangraan/soap4juddi?branch=master)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2301095e781d437ca9c3d2d645f361c1)](https://www.codacy.com/app/ernst-van-graan/soap4juddi?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=evangraan/soap4juddi&amp;utm_campaign=Badge_Grade)
 
 Soap4juddi provides connector, xml and brokerage facilities to interested consumers. It takes care of talking http or https SOAP to a jUDDI instance, as well as a means of translating the consumer's business domain into the jUDDI business domain (businesses, entities, bindings, etc.)
 
