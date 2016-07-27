@@ -138,7 +138,7 @@ describe Soap4juddi::Connector do
     it "should create a POST request with the uri" do
       req = @iut.connection(@base_uri, @service, @action)
       expect(req.is_a?(Net::HTTP::Post)).to eq(true)
-      #expect(req.uri.to_s).to eq("http://localhost:443/juddiv3/services/service")
+      # expect(req.uri.to_s).to eq("http://localhost:443/juddiv3/services/service")
     end
 
     it "should set the content type of the request to SOAP" do

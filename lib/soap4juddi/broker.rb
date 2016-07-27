@@ -222,8 +222,8 @@ module Soap4juddi
 
     def add_definition(body, definition)
       if definition and not (definition.strip == "")
-        keyedReference = @soap_xml.element_with_value('keyedReference', '', {'tModelKey' => 'uddi:uddi.org:wadl:types', 'keyName' => 'service-definition', 'keyValue' => definition})
-        return body + @soap_xml.element_with_value('categoryBag', keyedReference)
+        keyed_reference = @soap_xml.element_with_value('keyedReference', '', {'tModelKey' => 'uddi:uddi.org:wadl:types', 'keyName' => 'service-definition', 'keyValue' => definition})
+        return body + @soap_xml.element_with_value('categoryBag', keyed_reference)
       end
       body
     end
