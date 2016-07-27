@@ -141,17 +141,38 @@ module Soap4juddi
     end
 
     def extract_contact_entry_and_adapt(entries, entry)
-      entry.gsub!('useType="(Extension, Domestic, International, DSN)"', "") if entry
-      entry.gsub!('useType="Email"', "") if entry
-      entry.gsub!("useType='(Extension, Domestic, International, DSN)'", "") if entry
-      entry.gsub!("useType='Email'", "") if entry
-      contact = entry[/<ns2:contact (.*?)<\/ns2:contact>/, 1]
-      return entries, entry, true if contact.nil? or ((contact.is_a? String) and (contact.strip == ""))
+      contact, entry = reduce_entry_and_extract_contact(entry)
+      return entries, entry, true if invalid_contact?(contact)
       entries << { 'name' => extract_person_name(contact), 'description' => extract_description(contact), 'phone' => extract_phone(contact), 'email' => extract_email(contact)}
+      entry = reduce_entry_for_next_extraction(entry)
+      return entries, entry, false
+    end
+
+    def reduce_entry_for_next_extraction(entry)
       entry[/<ns2:contact (.*?)<\/ns2:contact>/, 1] = ""
       entry.gsub!("<ns2:contact </ns2:contact>", "")
       entry = nil if entry.strip == ""
-      return entries, entry, false
+      entry
+    end
+
+    def reduce_contact_fields(entry)
+      entry.gsub!('useType="(Extension, Domestic, International, DSN)"', "")
+      entry.gsub!('useType="Email"', "")
+      entry.gsub!("useType='(Extension, Domestic, International, DSN)'", "")
+      entry.gsub!("useType='Email'", "")
+      entry
+    end
+
+    def invalid_contact?(contact)
+      contact.nil? or ((contact.is_a? String) and (contact.strip == ""))
+    end
+
+    def reduce_entry_and_extract_contact(entry)
+      if entry
+        entry = reduce_contact_fields(entry)
+        contact = entry[/<ns2:contact (.*?)<\/ns2:contact>/, 1]
+      end
+      return contact, entry
     end
 
     def extract_service(soap)
